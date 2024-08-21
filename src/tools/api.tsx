@@ -44,7 +44,7 @@ const useAxiosInstance = () => {
 
         try {
           const refreshToken = cookie.get('refreshToken');
-          const response = await axios.post('https://api-test-web.agiletech.vn/auth/refresh-token', { token: refreshToken });
+          const response = await axiosInstance.post('/auth/refreshToken', { token: refreshToken });
 
           const { accessToken } = response.data;
           dispatch(setTokens({ accessToken }));

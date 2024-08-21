@@ -1,6 +1,8 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import ListPost from '../posts/list-posts';
+import DashBoardLayout from '../components/dashboard-layout';
 
 export default function HomePage() {
   const router = useRouter();
@@ -24,8 +26,8 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main>
-      <h1>Profile page</h1>
-    </main>
+    <DashBoardLayout>
+      <ListPost/>
+    </DashBoardLayout>
   );
 }

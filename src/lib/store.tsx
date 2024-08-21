@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import usersReducer from './features/user/userSlice';
+import postsReducer from './features/post/postSlice';
+import tagsReducer from './features/tag/tagSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       user: usersReducer,
+      post: postsReducer,
+      tag: tagsReducer,
     }
   })
 }
