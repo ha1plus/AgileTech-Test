@@ -34,6 +34,8 @@ export default function SignInForm() {
         // Set accessToken to Redux store
         dispatch(setTokens({ accessToken: data.accessToken }));
 
+        // console.log(res.data);
+        
         // Set refreshToken to cookie with 1-day expiration
         Cookies.set('refreshToken', data.refreshToken, { expires: 1 });
 

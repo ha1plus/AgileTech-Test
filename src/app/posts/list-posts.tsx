@@ -10,7 +10,7 @@ interface Post {
     id: string;
     title: string;
     description: string;
-    tags: string[];
+    tags: Array<{ tag: string }>;
 }
 
 interface PaginationData {
@@ -53,6 +53,8 @@ export default function ListPost() {
                     page_size: response.data.page_size,
                     total: response.data.total
                 });
+                // console.log(response.data.posts);
+                
             } catch (error) {
                 console.error('Failed to fetch posts:', error);
             } finally {
@@ -65,7 +67,7 @@ export default function ListPost() {
             try {
                 const response = await axiosInstance.get('/posts/tags');
                 setTags(response.data);
-                console.log(tag);
+                // console.log(tag);
                 
             } catch (error) {
                 console.error('Failed to fetch tags:', error);
@@ -83,6 +85,15 @@ export default function ListPost() {
             setPagination(prev => ({ ...prev, current_page: page }));
         }
     };
+
+    const deletePost = async (id: string) => {
+        try {
+            await axiosInstance.delete(`/posts/${id}`);
+            setPosts(prev => prev.filter(post => post.id !== id));
+        } catch (error) {
+            console.error('Failed to delete post:', error)
+        }
+    };   
 
     return (
         <div className='flex-1 py-4 px-2 lg:px-20 lg:mt-28'>
@@ -181,21 +192,31 @@ export default function ListPost() {
                             </tr>
                         </thead>
                         <tbody className='text-center'>
-                            {posts.map(post => (
-                                <tr key={post.id}>
+                            {posts.map((post, index) => (
+                                <tr key={`${post.id}-${index}`}>
                                     <td className="border border-black px-4 py-2">{post.id}</td>
                                     <td className="border border-black px-4 py-2">{post.title}</td>
                                     <td className="border border-black px-4 py-2">{post.description}</td>
                                     <td className="border border-black px-4 py-2">
-                                        {Array.isArray(post.tags) ? post.tags.join(', ') : 'No tags'}
+                                        {Array.isArray(post.tags) && post.tags.length > 0 ? 
+                                            (post.tags.length > 1 ? post.tags.map(item => item.tag ?  item.tag : item).join(', ') : post.tags[0].tag) 
+                                            : "No tags"}
                                     </td>
                                     <td className="border border-black px-4 py-2">
-                                        <button className="p-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 12v4h4v-4H4z" />
-                                            </svg>
-                                        </button>
-                                        <button className="p-2 ml-2">
+                                        <Link href={`/posts/${post.id}/edit`}>
+                                            <button className="p-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 12v4h4v-4H4z" />
+                                                </svg>
+                                            </button>
+                                        </Link>
+                                        <button className="p-2 ml-2"
+                                            onClick={() => {
+                                                if (confirm("Are you sure?")) {
+                                                    deletePost(post.id);
+                                                }
+                                            }}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                                                 <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H3a1 1 0 100 2h1v10a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-2V3a1 1 0 00-1-1H6zm3 4a1 1 0 112 0v8a1 1 0 11-2 0V6zm4 0a1 1 0 112 0v8a1 1 0 11-2 0V6z" clipRule="evenodd" />
                                             </svg>

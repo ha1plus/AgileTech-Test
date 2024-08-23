@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useParams } from 'next/navigation';
 
 type Inputs = {
   title: string;
@@ -21,6 +22,7 @@ export default function AddPost() {
   const [loading, setLoading] = useState<boolean>(false);
   const [tagOptions, setTagOptions] = useState<Array<string>>([]);
   const router = useRouter();
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     dispatch(fetchTags());
@@ -29,6 +31,7 @@ export default function AddPost() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<Inputs>();
 
@@ -38,7 +41,6 @@ export default function AddPost() {
         try {
             const response = await axiosInstance.get('/posts/tags');
             setTagOptions(response.data);
-            console.log(tagOptions);
         } catch (error) {
             console.error('Failed to fetch posts:', error);
         } finally {
@@ -51,19 +53,17 @@ export default function AddPost() {
 
   const onSubmit: SubmitHandler<Inputs> = async (dataSubmit) => {
     try {
-      const res = await axiosInstance.post('/posts', {
+      const res = await axiosInstance.patch(`/posts/${id}`, {
         title: dataSubmit.title,
         description: dataSubmit.description,
         tags: dataSubmit.tags
       });
-      console.log(dataSubmit);
-      
+      // console.log(dataSubmit);
 
       const data = res.data;
       
-      console.log(res.data);
       
-      if (res.status === 201) {
+      if (res.status === 200) {
         router.push('/profile');
       }
     } catch (error) {
@@ -75,7 +75,7 @@ export default function AddPost() {
     <DashBoardLayout>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex-1 p-3">
         <div className="flex items-center justify-between">
-          <label htmlFor="title" className="block text-sm font-bold text-gray-700">Add Post</label>
+          <label htmlFor="title" className="block text-sm font-bold text-gray-700">Edit Post</label>
           <Link href="/profile">
               <button className="btn btn-primary w-full lg:max-w-60">Back</button>
           </Link>
