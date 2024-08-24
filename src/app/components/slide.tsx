@@ -11,16 +11,17 @@ interface Slide {
 
 export default function Slideshow() {
     const [currentSlide, setCurrentSlide] = useState<number>(0);
+    const [slideLength, setSlideLength] = useState<number>(0);
     const [slides, setSlides] = useState<Slide[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const axiosInstance = useAxiosInstance();
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+        setCurrentSlide((prev) => (prev === slideLength - 1 ? 0 : prev + 1));
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+        setCurrentSlide((prev) => (prev === 0 ? slideLength - 1 : prev - 1));
     };
 
     useEffect(() => {
@@ -29,7 +30,7 @@ export default function Slideshow() {
         }, 3000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [slideLength]);
 
     useEffect(() => {
         const fetchSlides = async () => {
@@ -37,6 +38,7 @@ export default function Slideshow() {
             try {
                 const response = await axiosInstance.get('/galleries');
                 setSlides(response.data);
+                setSlideLength(response.data.length);
             } catch (error) {
                 console.error('Failed to fetch posts:', error);
             } finally {
