@@ -44,7 +44,7 @@ const useAxiosInstance = () => {
 
         try {
           const refreshToken = cookie.get('refreshToken');
-          const response = await axiosInstance.post('/auth/refreshToken', { token: refreshToken });
+          const response = await axios.post('/auth/refresh-token', { token: refreshToken });
 
           const { accessToken } = response.data;
           dispatch(setTokens({ accessToken }));

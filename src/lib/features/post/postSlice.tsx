@@ -17,12 +17,12 @@ const initialState: PostState = {
 };
 
 export const fetchPosts = createAsyncThunk('post/fetchPosts', async () => {
-  console.log('Fetching posts...'); // Debugging: Log before API call
+  // console.log('Fetching posts...'); // Debugging: Log before API call
   const axiosInstance = useAxiosInstance();
   try {
     const response = await axiosInstance.get<Post[]>('/posts');
-    console.log('API Response:', response); // Log the entire response object
-    console.log('API Response Data:', response.data); 
+    // console.log('API Response:', response); // Log the entire response object
+    // console.log('API Response Data:', response.data); 
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch posts');
