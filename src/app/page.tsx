@@ -2,6 +2,7 @@ import Banner from "./components/banner";
 import Fearture from "./components/feature";
 import Footer from "./components/footer";
 import Header from "./components/header";
+import Slide from "./components/slide";
 
 export default function Home() {
   return (
@@ -16,6 +17,10 @@ export default function Home() {
 
       <div>
         <Fearture/>
+      </div>
+
+      <div>
+        <Slide/>
       </div>
 
       <div>
